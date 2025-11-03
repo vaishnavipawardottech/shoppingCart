@@ -10,7 +10,7 @@ A fully functional, responsive shopping cart application built with React, Tailw
 ## ✨ Features
 
 ### 🛍️ Shopping Experience
-- **Product Catalog** - Browse 8 different products across multiple categories
+- **Product Catalog** - Browse different products across multiple categories
 - **Advanced Filtering** - Filter by category and price range
 - **Real-time Search** - Search products by name instantly
 - **Stock Management** - Real-time stock availability tracking
@@ -42,6 +42,7 @@ A fully functional, responsive shopping cart application built with React, Tailw
 - **Styling:** TailwindCSS 4.1.16
 - **Icons:** Lucide React 0.552.0
 - **State Management:** React Context API with useState
+- **Routing:** React Router DOM 7.x
 - **Data Persistence:** localStorage
 - **Image Source:** Unsplash (high-quality product images)
 
@@ -56,7 +57,7 @@ A fully functional, responsive shopping cart application built with React, Tailw
 1. **Clone the repository**
    ```bash
    git clone https://github.com/vaishnavipawardottech/shoppingCart.git
-   cd shoppingCart/shoppingcart
+   cd shoppingcart
    ```
 
 2. **Install dependencies**
@@ -125,16 +126,10 @@ Real-time case-insensitive search across product names
 ## 🎨 Design Features
 
 - **Color Scheme:** Indigo primary with clean gray tones
-- **Typography:** System font stack for optimal performance
 - **Responsive Breakpoints:** Mobile, Tablet, Desktop (sm, md, lg)
 - **Custom Dropdowns:** Built with React hooks for better control
 - **Modals:** Clean confirmation dialogs with backdrop overlay
 
-## 📱 Responsive Design
-
-- **Mobile (< 640px):** Single column layout, stacked navigation
-- **Tablet (640px - 1024px):** 2-3 column product grid
-- **Desktop (> 1024px):** 4 column product grid, full navigation
 
 ## 🔧 Available Scripts
 
@@ -165,28 +160,6 @@ npm run lint
 | Yoga Mat | Sports | ₹899 | 25 |
 | Bluetooth Speaker | Electronics | ₹1,999 | 10 |
 
-## 🔮 Future Enhancements
-
-- [ ] User authentication and profiles
-- [ ] Payment gateway integration
-- [ ] Order history and tracking
-- [ ] Product reviews and ratings
-- [ ] Wishlist functionality
-- [ ] Multiple currency support
-- [ ] Admin dashboard for product management
-- [ ] Advanced product sorting options
-- [ ] Email notifications
-- [ ] Social sharing features
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
 ## 📄 License
 
