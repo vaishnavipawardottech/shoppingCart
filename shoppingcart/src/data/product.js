@@ -30,6 +30,38 @@ const products = [
     image: 'https://picsum.photos/seed/mug/400/300',
     stock: 30,
     category: 'home'
+  },
+  {
+    id: 5,
+    name: 'Fitness Tracker Watch',
+    price: 149.99,
+    image: 'https://picsum.photos/seed/watch/400/300',
+    stock: 15,
+    category: 'electronics'
+  },
+  {
+    id: 6,
+    name: 'Canvas Backpack',
+    price: 45.00,
+    image: 'https://picsum.photos/seed/backpack/400/300',
+    stock: 8,
+    category: 'accessories'
+  },
+  {
+    id: 7,
+    name: 'Yoga Mat',
+    price: 35.50,
+    image: 'https://picsum.photos/seed/yogamat/400/300',
+    stock: 25,
+    category: 'sports'
+  },
+  {
+    id: 8,
+    name: 'Bluetooth Speaker',
+    price: 79.99,
+    image: 'https://picsum.photos/seed/speaker/400/300',
+    stock: 10,
+    category: 'electronics'
   }
 ]
 
