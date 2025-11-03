@@ -1,69 +1,105 @@
-import React from 'react'
-import { SlidersHorizontal, X } from 'lucide-react'
+import React, { useState, useRef, useEffect } from 'react'
+import { ChevronDown } from 'lucide-react'
 
-export default function ProductFilter({ filters, onFilterChange, onClearFilters }) {
-  const categories = ['all', 'electronics', 'accessories', 'footwear', 'home', 'sports']
+export default function ProductFilter({ filters, onFilterChange }) {
+  const [categoryOpen, setCategoryOpen] = useState(false)
+  const [priceOpen, setPriceOpen] = useState(false)
+  const categoryRef = useRef(null)
+  const priceRef = useRef(null)
+
+  const categories = ['category', 'electronics', 'accessories', 'footwear', 'home', 'sports']
   const priceRanges = [
-    { label: 'All Prices', min: 0, max: Infinity },
+    { label: 'Prices', min: 0, max: Infinity },
     { label: 'Under ₹50', min: 0, max: 50 },
     { label: '₹50 - ₹100', min: 50, max: 100 },
     { label: '₹100 - ₹200', min: 100, max: 200 },
     { label: 'Above ₹200', min: 200, max: Infinity }
   ]
 
-  const hasActiveFilters = filters.category !== 'all' || filters.priceRange.min !== 0 || filters.priceRange.max !== Infinity
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (categoryRef.current && !categoryRef.current.contains(event.target)) {
+        setCategoryOpen(false)
+      }
+      if (priceRef.current && !priceRef.current.contains(event.target)) {
+        setPriceOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const handleCategorySelect = (cat) => {
+    onFilterChange({ ...filters, category: cat })
+    setCategoryOpen(false)
+  }
+
+  const handlePriceSelect = (range) => {
+    onFilterChange({ ...filters, priceRange: { min: range.min, max: range.max } })
+    setPriceOpen(false)
+  }
 
   return (
-    <div className="bg-white shadow-sm rounded-lg p-4 mb-6">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <SlidersHorizontal size={18} className="text-gray-600" />
-          <h3 className="text-sm font-semibold text-gray-800">Filters</h3>
-        </div>
-        {hasActiveFilters && (
-          <button
-            onClick={onClearFilters}
-            className="flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-700 transition-colors"
-          >
-            <X size={14} />
-            Clear All
-          </button>
+    <div className="flex items-center gap-3 mb-6">
+      {/* Category Dropdown */}
+      <div className="relative" ref={categoryRef}>
+        <button
+          onClick={() => setCategoryOpen(!categoryOpen)}
+          className="flex items-center gap-2 text-sm border border-gray-300 rounded-md px-4 py-2 bg-white hover:border-gray-400 transition-colors focus:outline-none"
+        >
+          <span>{filters.category.charAt(0).toUpperCase() + filters.category.slice(1)}</span>
+          <ChevronDown size={16} className={`transition-transform ${categoryOpen ? 'rotate-180' : ''}`} />
+        </button>
+        
+        {categoryOpen && (
+          <div className="absolute top-full left-0 mt-1 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10 max-h-60 overflow-y-auto">
+            {categories.map((cat) => (
+              <div
+                key={cat}
+                onClick={() => handleCategorySelect(cat)}
+                className={`px-4 py-2 text-sm cursor-pointer hover:bg-gray-100 transition-colors ${
+                  filters.category === cat ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700'
+                }`}
+              >
+                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+              </div>
+            ))}
+          </div>
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Category Filter */}
-        <div>
-          <label className="block text-xs font-medium text-gray-700 mb-2">Category</label>
-          <select
-            value={filters.category}
-            onChange={(e) => onFilterChange({ ...filters, category: e.target.value })}
-            className="w-full text-sm border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300"
-          >
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat.charAt(0).toUpperCase() + cat.slice(1)}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Price Range Filter */}
-        <div>
-          <label className="block text-xs font-medium text-gray-700 mb-2">Price Range</label>
-          <select
-            value={JSON.stringify(filters.priceRange)}
-            onChange={(e) => onFilterChange({ ...filters, priceRange: JSON.parse(e.target.value) })}
-            className="w-full text-sm border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300"
-          >
+      {/* Price Dropdown */}
+      <div className="relative" ref={priceRef}>
+        <button
+          onClick={() => setPriceOpen(!priceOpen)}
+          className="flex items-center gap-2 text-sm border border-gray-300 rounded-md px-4 py-2 bg-white hover:border-gray-400 transition-colors focus:outline-none"
+        >
+          <span>
+            {priceRanges.find(r => r.min === filters.priceRange.min && r.max === filters.priceRange.max)?.label || 'Prices'}
+          </span>
+          <ChevronDown size={16} className={`transition-transform ${priceOpen ? 'rotate-180' : ''}`} />
+        </button>
+        
+        {priceOpen && (
+          <div className="absolute top-full left-0 mt-1 w-44 bg-white border border-gray-200 rounded-md shadow-lg z-10">
             {priceRanges.map((range, idx) => (
-              <option key={idx} value={JSON.stringify({ min: range.min, max: range.max })}>
+              <div
+                key={idx}
+                onClick={() => handlePriceSelect(range)}
+                className={`px-4 py-2 text-sm cursor-pointer hover:bg-gray-100 transition-colors ${
+                  filters.priceRange.min === range.min && filters.priceRange.max === range.max
+                    ? 'bg-indigo-50 text-indigo-600'
+                    : 'text-gray-700'
+                }`}
+              >
                 {range.label}
-              </option>
+              </div>
             ))}
-          </select>
-        </div>
+          </div>
+        )}
       </div>
     </div>
   )
 }
+

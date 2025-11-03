@@ -5,13 +5,13 @@ import ProductFilter from './ProductFilter'
 
 export default function ProductList() {
   const [filters, setFilters] = useState({
-    category: 'all',
+    category: 'category',
     priceRange: { min: 0, max: Infinity }
   })
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
-      const categoryMatch = filters.category === 'all' || product.category === filters.category
+      const categoryMatch = filters.category === 'category' || product.category === filters.category
       const priceMatch = product.price >= filters.priceRange.min && product.price <= filters.priceRange.max
       return categoryMatch && priceMatch
     })
@@ -19,7 +19,7 @@ export default function ProductList() {
 
   const handleClearFilters = () => {
     setFilters({
-      category: 'all',
+      category: 'category',
       priceRange: { min: 0, max: Infinity }
     })
   }
@@ -31,7 +31,6 @@ export default function ProductList() {
       <ProductFilter 
         filters={filters} 
         onFilterChange={setFilters}
-        onClearFilters={handleClearFilters}
       />
 
       {filteredProducts.length === 0 ? (
