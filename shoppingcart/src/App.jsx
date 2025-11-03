@@ -2,13 +2,23 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import Navbar from './components/NavBar'
+import ProductList from './components/ProductList'
+import CartPage from './components/CartPage'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [page, setPage] = useState('home')
 
   return (
     <>
-      <h1 className='text-2xl bg-blue-400'>hello from vaishu!</h1>
+      <div className="min-h-screen bg-gray-50">
+        <Navbar onNavigate={(p) => setPage(p)} page={page} />
+
+        <main className="main-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          {page === 'home' && <ProductList />}
+          {page === 'cart' && <CartPage />}
+        </main>
+      </div>
     </>
   )
 }
