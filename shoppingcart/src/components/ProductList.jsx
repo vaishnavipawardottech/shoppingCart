@@ -3,7 +3,7 @@ import products from '../data/product.js'
 import ProductCard from './ProductCard'
 import ProductFilter from './ProductFilter'
 
-export default function ProductList() {
+export default function ProductList({ searchQuery }) {
   const [filters, setFilters] = useState({
     category: 'category',
     priceRange: { min: 0, max: Infinity }
@@ -13,9 +13,10 @@ export default function ProductList() {
     return products.filter((product) => {
       const categoryMatch = filters.category === 'category' || product.category === filters.category
       const priceMatch = product.price >= filters.priceRange.min && product.price <= filters.priceRange.max
-      return categoryMatch && priceMatch
+      const searchMatch = searchQuery === '' || product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      return categoryMatch && priceMatch && searchMatch
     })
-  }, [filters])
+  }, [filters, searchQuery])
 
   const handleClearFilters = () => {
     setFilters({

@@ -2,7 +2,7 @@ import React from 'react'
 import { Home, ShoppingCart, User, Search } from 'lucide-react'
 import { useCart } from '../contexts/CartContext'
 
-export default function Navbar({ onNavigate, page }) {
+export default function Navbar({ onNavigate, page, searchQuery, onSearchChange }) {
   const { totals } = useCart()
 
   return (
@@ -14,17 +14,8 @@ export default function Navbar({ onNavigate, page }) {
           </div>
 
           <div className="flex items-center space-x-4">
-            {/* Right side: search -> Home -> Cart icon with badge */}
+            {/* Right side: Home -> Cart icon with badge -> search */}
             <div className="flex items-center space-x-6">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  className="pl-8 pr-3 py-2 border rounded-md w-48 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-300"
-                />
-                <Search size={16} className="absolute left-2 top-2 text-gray-400" />
-              </div>
-
               <button onClick={() => onNavigate('home')} className={`text-sm ${page === 'home' ? 'text-indigo-600' : 'text-gray-600'}`}>
                 Home
               </button>
@@ -34,6 +25,17 @@ export default function Navbar({ onNavigate, page }) {
                   <ShoppingCart size={20} className={`${page === 'cart' ? 'text-indigo-600' : 'text-gray-600'}`} />
                 </button>
                 <span className="text-xs bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md font-medium">{totals.totalItems}</span>
+              </div>
+
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => onSearchChange(e.target.value)}
+                  className="pl-8 pr-3 py-2 border rounded-md w-48 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-300"
+                />
+                <Search size={16} className="absolute left-2 top-2 text-gray-400" />
               </div>
 
             </div>

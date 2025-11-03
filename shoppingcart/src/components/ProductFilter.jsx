@@ -10,10 +10,11 @@ export default function ProductFilter({ filters, onFilterChange }) {
   const categories = ['category', 'electronics', 'accessories', 'footwear', 'home', 'sports']
   const priceRanges = [
     { label: 'Prices', min: 0, max: Infinity },
-    { label: 'Under ₹50', min: 0, max: 50 },
-    { label: '₹50 - ₹100', min: 50, max: 100 },
-    { label: '₹100 - ₹200', min: 100, max: 200 },
-    { label: 'Above ₹200', min: 200, max: Infinity }
+    { label: 'Under ₹500', min: 0, max: 500 },
+    { label: '₹500 - ₹1500', min: 500, max: 1500 },
+    { label: '₹1500 - ₹3000', min: 1500, max: 3000 },
+    { label: '₹3000 - ₹5000', min: 3000, max: 5000 },
+    { label: 'Above ₹5000', min: 5000, max: Infinity }
   ]
 
   useEffect(() => {
