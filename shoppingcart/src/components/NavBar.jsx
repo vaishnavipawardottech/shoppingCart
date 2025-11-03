@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { ShoppingCart, Search } from 'lucide-react'
 import { useCart } from '../contexts/CartContext'
 
@@ -11,22 +11,27 @@ export default function Navbar({ searchQuery, onSearchChange }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="h-16 flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Link to="/" className="text-xl font-semibold text-indigo-600">
+            <NavLink to="/" className="text-xl font-semibold text-indigo-600">
               AddtoCart
-            </Link>
+            </NavLink>
           </div>
 
           <div className="flex items-center space-x-4">
             {/* Right side */}
             <div className="flex items-center space-x-6">
-              <Link to="/" className="text-sm text-gray-600 hover:text-gray-800">
+              <NavLink 
+                to="/" 
+                className={({ isActive }) => `text-base ${isActive ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-800'}`}
+              >
                 Home
-              </Link>
+              </NavLink>
 
               <div className="flex items-center space-x-1">
-                <Link to="/cart" className="relative">
-                  <ShoppingCart size={20} className="text-gray-600 hover:text-gray-800" />
-                </Link>
+                <NavLink to="/cart" className="relative">
+                  {({ isActive }) => (
+                    <ShoppingCart size={20} className={isActive ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-800'} />
+                  )}
+                </NavLink>
                 <span className="text-xs bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md font-medium">{totals.totalItems}</span>
               </div>
 
