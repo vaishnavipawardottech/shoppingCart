@@ -67,20 +67,23 @@ export default function ProductCard({ product }) {
               </button>
             </div>
 
-            {/* Dropdown Options - Opens downward within card bounds */}
-            {isOpen && (
+            {/* Dropdown Options */}
+            {isOpen && remaining > 0 && (
               <div className="absolute top-8 right-0 z-20 bg-white border border-gray-300 rounded shadow-lg max-h-20 overflow-y-auto w-16">
-                {Array.from({ length: remaining }, (_, i) => i + 1).map((n) => (
-                  <button
-                    key={n}
-                    onClick={() => handleQtySelect(n)}
-                    className={`w-full text-left px-3 py-1.5 text-xs hover:bg-indigo-50 transition-colors ${
-                      qty === n ? 'bg-indigo-100 font-medium' : ''
-                    }`}
-                  >
-                    {n}
-                  </button>
-                ))}
+                {[...Array(remaining)].map((_, index) => {
+                  const value = index + 1
+                  return (
+                    <button
+                      key={value}
+                      onClick={() => handleQtySelect(value)}
+                      className={`w-full text-left px-3 py-1.5 text-xs hover:bg-indigo-50 transition-colors ${
+                        qty === value ? 'bg-indigo-100 font-medium' : ''
+                      }`}
+                    >
+                      {value}
+                    </button>
+                  )
+                })}
               </div>
             )}
 
@@ -99,7 +102,7 @@ export default function ProductCard({ product }) {
           </div>
         </div>
 
-        {/* Stock Status Badge - Positioned at bottom-right corner */}
+        {/* Stock Status */}
         <div className={`absolute bottom-0 right-0 text-xs font-medium whitespace-nowrap px-3.5 py-2 rounded-tl-2xl ${
           remaining > 0 ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
         }`}>

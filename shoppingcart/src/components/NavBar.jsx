@@ -1,8 +1,9 @@
 import React from 'react'
-import { Home, ShoppingCart, User, Search } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { ShoppingCart, Search } from 'lucide-react'
 import { useCart } from '../contexts/CartContext'
 
-export default function Navbar({ onNavigate, page, searchQuery, onSearchChange }) {
+export default function Navbar({ searchQuery, onSearchChange }) {
   const { totals } = useCart()
 
   return (
@@ -10,20 +11,22 @@ export default function Navbar({ onNavigate, page, searchQuery, onSearchChange }
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="h-16 flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="text-xl font-semibold text-indigo-600">AddtoCart</div>
+            <Link to="/" className="text-xl font-semibold text-indigo-600">
+              AddtoCart
+            </Link>
           </div>
 
           <div className="flex items-center space-x-4">
-            {/* Right side: Home -> Cart icon with badge -> search */}
+            {/* Right side */}
             <div className="flex items-center space-x-6">
-              <button onClick={() => onNavigate('home')} className={`text-sm ${page === 'home' ? 'text-indigo-600' : 'text-gray-600'}`}>
+              <Link to="/" className="text-sm text-gray-600 hover:text-gray-800">
                 Home
-              </button>
+              </Link>
 
               <div className="flex items-center space-x-1">
-                <button onClick={() => onNavigate('cart')} className="relative">
-                  <ShoppingCart size={20} className={`${page === 'cart' ? 'text-indigo-600' : 'text-gray-600'}`} />
-                </button>
+                <Link to="/cart" className="relative">
+                  <ShoppingCart size={20} className="text-gray-600 hover:text-gray-800" />
+                </Link>
                 <span className="text-xs bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md font-medium">{totals.totalItems}</span>
               </div>
 

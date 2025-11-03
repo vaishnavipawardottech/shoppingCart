@@ -15,7 +15,6 @@ export default function ConfirmationModal({
   return (
     <div className="fixed inset-0 bg-gray-50 bg-opacity-95 flex items-center justify-center z-50">
       <div className="bg-white shadow-xl w-full max-w-md mx-4 relative">
-        {/* X Close Button */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-black hover:bg-red-500 hover:text-white p-1 transition-colors duration-200"

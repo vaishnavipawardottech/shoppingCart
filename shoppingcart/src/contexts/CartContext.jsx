@@ -12,8 +12,8 @@ export function CartProvider({ children }) {
     try {
       const raw = localStorage.getItem('cart_items')
       if (raw) return JSON.parse(raw)
-    } catch (e) {
-      /* ignore */
+    } catch (err) {
+      console.log(err);
     }
     return []
   })
@@ -21,8 +21,8 @@ export function CartProvider({ children }) {
   useEffect(() => {
     try {
       localStorage.setItem('cart_items', JSON.stringify(items))
-    } catch (e) {
-      /* ignore */
+    } catch (err) {
+      console.log(err);
     }
   }, [items])
 
