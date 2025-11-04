@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState } from 'react'
 import products from '../data/product.js'
 import ProductCard from './ProductCard'
 import ProductFilter from './ProductFilter'
@@ -9,14 +9,12 @@ export default function ProductList({ searchQuery }) {
     priceRange: { min: 0, max: Infinity }
   })
 
-  const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      const categoryMatch = filters.category === 'category' || product.category === filters.category
-      const priceMatch = product.price >= filters.priceRange.min && product.price <= filters.priceRange.max
-      const searchMatch = searchQuery === '' || product.name.toLowerCase().includes(searchQuery.toLowerCase())
-      return categoryMatch && priceMatch && searchMatch
-    })
-  }, [filters, searchQuery])
+  const filteredProducts = products.filter((product) => {
+    const categoryMatch = filters.category === 'category' || product.category === filters.category
+    const priceMatch = product.price >= filters.priceRange.min && product.price <= filters.priceRange.max
+    const searchMatch = searchQuery === '' || product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    return categoryMatch && priceMatch && searchMatch
+  })
 
   const handleClearFilters = () => {
     setFilters({
