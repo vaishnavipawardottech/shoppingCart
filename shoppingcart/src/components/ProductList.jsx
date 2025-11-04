@@ -2,12 +2,18 @@ import React, { useState, useMemo } from 'react'
 import products from '../data/product.js'
 import ProductCard from './ProductCard'
 import ProductFilter from './ProductFilter'
+import Toast from './Toast'
 
 export default function ProductList({ searchQuery }) {
   const [filters, setFilters] = useState({
     category: 'category',
     priceRange: { min: 0, max: Infinity }
   })
+  const [showToast, setShowToast] = useState(false)
+
+  const handleProductAdded = () => {
+    setShowToast(true)
+  }
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
@@ -27,6 +33,12 @@ export default function ProductList({ searchQuery }) {
 
   return (
     <div>
+      <Toast 
+        message="Product added successfully to cart" 
+        isVisible={showToast} 
+        onClose={() => setShowToast(false)} 
+      />
+      
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">Products</h2>
       
       <ProductFilter 
@@ -47,7 +59,7 @@ export default function ProductList({ searchQuery }) {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredProducts.map((p) => (
-            <ProductCard key={p.id} product={p} />
+            <ProductCard key={p.id} product={p} onProductAdded={handleProductAdded} />
           ))}
         </div>
       )}

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useCart } from '../contexts/CartContext'
 import { ShoppingCart, ChevronDown } from 'lucide-react'
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, onProductAdded }) {
   const [qty, setQty] = useState(1)
   const [isOpen, setIsOpen] = useState(false)
   const { addToCart, items } = useCart()
@@ -32,6 +32,9 @@ export default function ProductCard({ product }) {
   function onAdd() {
     if (remaining <= 0) return
     addToCart(product, qty)
+    if (onProductAdded) {
+      onProductAdded()
+    }
   }
 
   function handleQtySelect(value) {
