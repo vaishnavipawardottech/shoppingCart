@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useCart } from '../contexts/CartContext'
-import { ShoppingCart, ChevronDown } from 'lucide-react'
+import { ShoppingCart, ChevronDown, Check } from 'lucide-react'
 
-export default function ProductCard({ product, onProductAdded }) {
+export default function ProductCard({ product }) {
   const [qty, setQty] = useState(1)
   const [isOpen, setIsOpen] = useState(false)
+  const [justAdded, setJustAdded] = useState(false)
   const { addToCart, items } = useCart()
   const dropdownRef = useRef(null)
 
@@ -32,9 +33,10 @@ export default function ProductCard({ product, onProductAdded }) {
   function onAdd() {
     if (remaining <= 0) return
     addToCart(product, qty)
-    if (onProductAdded) {
-      onProductAdded()
-    }
+    setJustAdded(true)
+    setTimeout(() => {
+      setJustAdded(false)
+    }, 2000) // Revert back after 2 seconds
   }
 
   function handleQtySelect(value) {
@@ -98,12 +100,28 @@ export default function ProductCard({ product, onProductAdded }) {
           disabled={remaining <= 0}
           className={`w-full py-2.5 rounded-md font-medium text-sm transition-all duration-200 flex items-center justify-center gap-2 ${
             remaining > 0 
-              ? 'bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800' 
+              ? justAdded 
+                ? 'bg-green-600 text-white' 
+                : 'bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800'
               : 'bg-gray-200 text-gray-400 cursor-not-allowed'
           }`}
         >
-          <ShoppingCart size={18} />
-          <span>{remaining <= 0 ? 'Out of Stock' : 'Add to Cart'}</span>
+          {remaining <= 0 ? (
+            <>
+              <ShoppingCart size={18} />
+              <span>Out of Stock</span>
+            </>
+          ) : justAdded ? (
+            <>
+              <Check size={18} />
+              <span>Added to Cart</span>
+            </>
+          ) : (
+            <>
+              <ShoppingCart size={18} />
+              <span>Add to Cart</span>
+            </>
+          )}
         </button>
 
         {/* Stock Status Badge */}
