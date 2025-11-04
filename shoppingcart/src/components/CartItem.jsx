@@ -11,8 +11,14 @@ export default function CartItem({ item }) {
   function onIncrease() {
     updateQuantity(product.id, quantity + 1)
   }
+  
   function onDecrease() {
-    updateQuantity(product.id, quantity - 1)
+    if (quantity === 1) {
+      // If trying to decrease from 1, show confirmation to remove
+      setShowConfirmModal(true)
+    } else {
+      updateQuantity(product.id, quantity - 1)
+    }
   }
 
   function handleRemoveClick() {
@@ -43,9 +49,11 @@ export default function CartItem({ item }) {
             <div className="flex items-center border rounded-md overflow-hidden mt-8 w-fit">
               <button 
                 onClick={onDecrease} 
-                className="px-2 py-1 hover:bg-gray-50 transition-colors duration-150"
+                className={`px-2 py-1 transition-colors duration-150 ${
+                  quantity === 1 ? 'hover:bg-red-50 text-red-600' : 'hover:bg-gray-50'
+                }`}
               >
-                <Minus size={12} />
+                {quantity === 1 ? <Trash2 size={12} /> : <Minus size={12} />}
               </button>
               <div className="px-3 py-1 text-xs font-medium bg-white">{quantity}</div>
               <button 

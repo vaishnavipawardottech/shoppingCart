@@ -1,47 +1,36 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useCart } from '../contexts/CartContext'
-import { ShoppingCart, ChevronDown, Check } from 'lucide-react'
+import { ShoppingCart, Check, Plus, Minus } from 'lucide-react'
 
 export default function ProductCard({ product }) {
-  const [qty, setQty] = useState(1)
-  const [isOpen, setIsOpen] = useState(false)
   const [justAdded, setJustAdded] = useState(false)
-  const { addToCart, items } = useCart()
-  const dropdownRef = useRef(null)
+  const { addToCart, updateQuantity, removeFromCart, items } = useCart()
 
   const inCart = items.find((it) => it.product.id === product.id)
   const inCartQty = inCart ? inCart.quantity : 0
   const remaining = Math.max(0, product.stock - inCartQty)
 
-  // Reset qty to 1 when remaining stock changes
-  useEffect(() => {
-    if (remaining > 0 && qty > remaining) {
-      setQty(1)
-    }
-  }, [remaining, qty])
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
-
   function onAdd() {
     if (remaining <= 0) return
-    addToCart(product, qty)
+    addToCart(product, 1)
     setJustAdded(true)
     setTimeout(() => {
       setJustAdded(false)
     }, 2000) // Revert back after 2 seconds
   }
 
-  function handleQtySelect(value) {
-    setQty(value)
-    setIsOpen(false)
+  function onIncrease() {
+    if (inCartQty < product.stock) {
+      updateQuantity(product.id, inCartQty + 1)
+    }
+  }
+
+  function onDecrease() {
+    if (inCartQty === 1) {
+      removeFromCart(product.id)
+    } else {
+      updateQuantity(product.id, inCartQty - 1)
+    }
   }
 
   return (
@@ -57,72 +46,56 @@ export default function ProductCard({ product }) {
             <h3 className="text-sm font-semibold text-gray-800 mt-0.5 line-clamp-1">{product.name}</h3>
             <p className="text-sm text-indigo-600 font-bold mt-1">₹{product.price.toFixed(2)}</p>
           </div>
-
-          <div className="flex flex-col items-end gap-1.5 shrink-0 relative mt-7" ref={dropdownRef}>
-            {/* Custom Qty Dropdown */}
-            <div className="flex items-center gap-1">
-              <label className="text-xs text-gray-600 font-medium">Qty:</label>
-              <button
-                onClick={() => !remaining ? null : setIsOpen(!isOpen)}
-                disabled={remaining <= 0}
-                className="text-xs border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-300 bg-white flex items-center gap-1 min-w-[50px] justify-between disabled:bg-gray-100 disabled:cursor-not-allowed"
-              >
-                <span>{remaining <= 0 ? '0' : qty}</span>
-                <ChevronDown size={12} />
-              </button>
-            </div>
-
-            {/* Dropdown Options */}
-            {isOpen && remaining > 0 && (
-              <div className="absolute top-8 right-0 z-20 bg-white border border-gray-300 rounded shadow-lg max-h-20 overflow-y-auto w-16">
-                {[...Array(remaining)].map((_, index) => {
-                  const value = index + 1
-                  return (
-                    <button
-                      key={value}
-                      onClick={() => handleQtySelect(value)}
-                      className={`w-full text-left px-3 py-1.5 text-xs hover:bg-indigo-50 transition-colors ${
-                        qty === value ? 'bg-indigo-100 font-medium' : ''
-                      }`}
-                    >
-                      {value}
-                    </button>
-                  )
-                })}
-              </div>
-            )}
-          </div>
         </div>
 
-        {/* Add to Cart Button */}
-        <button
-          onClick={onAdd}
-          disabled={remaining <= 0}
-          className={`w-full py-2.5 rounded-md font-medium text-sm transition-all duration-200 flex items-center justify-center gap-2 ${
-            remaining > 0 
-              ? justAdded 
-                ? 'bg-green-600 text-white' 
-                : 'bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800'
-              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-          }`}
-        >
-          {remaining <= 0 ? (
-            <>
-              <ShoppingCart size={18} />
-              <span>Out of Stock</span>
-            </>
-          ) : justAdded ? (
-            <>
-              <Check size={18} />
-              <span>Added to Cart</span>
-            </>
-          ) : (
-            <>
-              <ShoppingCart size={18} />
-              <span>Add to Cart</span>
-            </>
-          )}
-        </button>
+        {/* Add to Cart Button or Quantity Controls */}
+        {inCartQty === 0 || justAdded ? (
+          <button
+            onClick={onAdd}
+            disabled={remaining <= 0 || justAdded}
+            className={`w-full py-2.5 rounded-md font-medium text-sm transition-all duration-200 flex items-center justify-center gap-2 ${
+              remaining > 0 
+                ? justAdded 
+                  ? 'bg-green-600 text-white' 
+                  : 'bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800'
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            }`}
+          >
+            {remaining <= 0 ? (
+              <>
+                <ShoppingCart size={18} />
+                <span>Out of Stock</span>
+              </>
+            ) : justAdded ? (
+              <>
+                <Check size={18} />
+                <span>Added to Cart</span>
+              </>
+            ) : (
+              <>
+                <ShoppingCart size={18} />
+                <span>Add to Cart</span>
+              </>
+            )}
+          </button>
+        ) : (
+          <div className="flex items-center justify-center gap-15 bg-gray-100 rounded-md py-2 px-6">
+            <button 
+              onClick={onDecrease} 
+              className="w-7 h-7 rounded-full hover:bg-indigo-100 transition-colors duration-150 flex items-center justify-center text-indigo-600"
+            >
+              <Minus size={14} />
+            </button>
+            <div className="text-sm font-semibold text-gray-800 min-w-6 text-center">{inCartQty}</div>
+            <button 
+              onClick={onIncrease} 
+              disabled={inCartQty >= product.stock}
+              className="w-7 h-7 rounded-full hover:bg-indigo-100 transition-colors duration-150 flex items-center justify-center text-indigo-600 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+            >
+              <Plus size={14} />
+            </button>
+          </div>
+        )}
 
         {/* Stock Status Badge */}
         <div className={`absolute top-0 right-0 text-xs font-medium whitespace-nowrap px-3 py-1.5 rounded-bl-lg ${
