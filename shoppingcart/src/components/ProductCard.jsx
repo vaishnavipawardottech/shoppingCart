@@ -40,12 +40,12 @@ export default function ProductCard({ product }) {
   }
 
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden h-96 flex flex-col hover:shadow-lg transition-shadow duration-200 relative">
-      <div className="h-[70%]">
+    <div className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col hover:shadow-lg transition-shadow duration-200 relative" style={{ height: '420px' }}>
+      <div className="h-[65%]">
         <img src={product.image} alt={product.name} className="w-full h-full object-cover rounded-t-lg" />
       </div>
 
-      <div className="h-[30%] p-3 flex flex-col justify-between overflow-hidden relative">
+      <div className="h-[35%] p-3 flex flex-col justify-between overflow-hidden relative">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
             <p className="text-xs text-gray-500 uppercase tracking-wide truncate">{product.category}</p>
@@ -53,7 +53,7 @@ export default function ProductCard({ product }) {
             <p className="text-sm text-indigo-600 font-bold mt-1">₹{product.price.toFixed(2)}</p>
           </div>
 
-          <div className="flex flex-col items-end gap-1.5 shrink-0 relative" ref={dropdownRef}>
+          <div className="flex flex-col items-end gap-1.5 shrink-0 relative mt-7" ref={dropdownRef}>
             {/* Custom Qty Dropdown */}
             <div className="flex items-center gap-1">
               <label className="text-xs text-gray-600 font-medium">Qty:</label>
@@ -86,24 +86,25 @@ export default function ProductCard({ product }) {
                 })}
               </div>
             )}
-
-            <button
-              onClick={onAdd}
-              disabled={remaining <= 0}
-              className={`p-1.5 rounded-full transition-all duration-200 ${
-                remaining > 0 
-                  ? 'text-black hover:text-gray-600 hover:bg-gray-50' 
-                  : 'text-gray-300 cursor-not-allowed'
-              }`}
-              title={remaining <= 0 ? 'Out of stock' : 'Add to cart'}
-            >
-              <ShoppingCart size={18} />
-            </button>
           </div>
         </div>
 
-        {/* Stock Status */}
-        <div className={`absolute bottom-0 right-0 text-xs font-medium whitespace-nowrap px-3.5 py-2 rounded-tl-2xl ${
+        {/* Add to Cart Button */}
+        <button
+          onClick={onAdd}
+          disabled={remaining <= 0}
+          className={`w-full py-2.5 rounded-md font-medium text-sm transition-all duration-200 flex items-center justify-center gap-2 ${
+            remaining > 0 
+              ? 'bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800' 
+              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+          }`}
+        >
+          <ShoppingCart size={18} />
+          <span>{remaining <= 0 ? 'Out of Stock' : 'Add to Cart'}</span>
+        </button>
+
+        {/* Stock Status Badge */}
+        <div className={`absolute top-0 right-0 text-xs font-medium whitespace-nowrap px-3 py-1.5 rounded-bl-lg ${
           remaining > 0 ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
         }`}>
           {remaining > 0 ? `In stock (${remaining})` : 'Out of stock'}
